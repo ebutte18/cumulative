@@ -2,5 +2,34 @@
 title: "Cumulative"
 author: "Eric Butte"
 format: html
+execute: 
+  echo: false
 ---
 
+
+```{r}
+#| message: false
+#| warning: false
+library(tidyverse)
+library(primer.data)
+```
+
+
+```{r}
+x <- ces |>
+filter(year == 2020) |>
+select(approval, education, ideology) |>
+drop_na() |> 
+slice_sample(n = 2000)
+```
+
+
+```{r}
+x |>
+ggplot(aes(x = ideology, fill = approval)) + geom_bar() +
+labs(title = "Approval ratings of President Trump in 2020", 
+subtitle = "Liberals disapproved and Converservatives approved",
+x = "Ideology", y = "Number of persons")
+```
+
+Political ideology of a citizen will consistently reflect their approval rating of the president. Using a data source from CES, we can unpack this phenomenon and understand why it is. 
