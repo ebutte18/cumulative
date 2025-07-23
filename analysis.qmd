@@ -10,17 +10,29 @@ execute:
 ```{r}
 #| message: false
 #| warning: false
+library(MASS)
 library(tidyverse)
 library(primer.data)
+library(broom)
+library(dplyr)
+library(easystats)
+```
+
+```{r}
+#| cache: true
 ```
 
 
 ```{r}
-x <- ces |>
-filter(year == 2020) |>
-select(approval, education, ideology) |>
-drop_na() |> 
-slice_sample(n = 2000)
+x <- x <- ces |>
+  filter(year == 2020) |>
+  select(approval, ideology, education) |>
+  drop_na() |> 
+  filter(! ideology %in% "Not Sure") |> 
+  mutate(ideology = fct_drop(ideology))
+
+fit_approval <- polr(approval ~ ideology + education,
+                      data = x)
 ```
 
 
@@ -32,4 +44,36 @@ subtitle = "Liberals disapproved and Converservatives approved",
 x = "Ideology", y = "Number of persons")
 ```
 
-Political ideology of a citizen will consistently reflect their approval rating of the president. Using a data source from CES, we can unpack this phenomenon and understand why it is. 
+$$
+\log \left( \frac{\mathbb{P}(Y_i \leq k)}{\mathbb{P}(Y_i > k)} \right)
+= \theta_k - \left( \beta_1 X_{1i} + \beta_2 X_{2i} + \cdots + \beta_p X_{pi} \right),
+\quad \text{for } k = 1, \dots, K - 1
+$$
+
+```{r}
+fit_approval |>
+    tidy(conf.int = TRUE)
+```
+
+$$
+\log \left( \frac{\mathbb{P}(\hat{Y}_i \leq k)}{\mathbb{P}(\hat{Y}_i > k)} \right) = \theta_k
+- \bigg(
+  0.615 \cdot \text{ideology}_{\text{Liberal}, i}
++ 2.401 \cdot \text{ideology}_{\text{Moderate}, i}
++ 4.464 \cdot \text{ideology}_{\text{Conservative}, i}
++ 5.454 \cdot \text{ideology}_{\text{VeryConservative}, i}
+- 0.096 \cdot \text{education}_{\text{HighSchoolGrad}, i}
+- 0.311 \cdot \text{education}_{\text{SomeCollege}, i}
+- 0.325 \cdot \text{education}_{\text{2Year}, i}
+- 0.521 \cdot \text{education}_{\text{4Year}, i}
+- 0.727 \cdot \text{education}_{\text{PostGrad}, i}
+\bigg)
+\quad \text{for } k = 1, \dots, 4
+$$
+
+
+
+
+
+Political ideology of a citizen will consistently reflect their approval rating of the president. Using a data source from CES, we can unpack this phenomenon and understand why it is. A weakness is that the survey was conducted in 2020 and many people's poltiical ideologies could have changed since then based on multiple world events like COVID-19 and the ensuing years. 
+

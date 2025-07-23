@@ -36,6 +36,35 @@ ul.task-list li input[type="checkbox"] {
 <link href="analysis_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="analysis_files/libs/bootstrap/bootstrap-bb462d781dde1847d9e3ccf7736099dd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -74,12 +103,56 @@ ul.task-list li input[type="checkbox"] {
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="analysis_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="analysis_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>Political ideology of a citizen will consistently reflect their approval rating of the president. Using a data source from CES, we can unpack this phenomenon and understand why it is.</p>
+<p><span class="math display">\[
+\log \left( \frac{\mathbb{P}(Y_i \leq k)}{\mathbb{P}(Y_i &gt; k)} \right)
+= \theta_k - \left( \beta_1 X_{1i} + \beta_2 X_{2i} + \cdots + \beta_p X_{pi} \right),
+\quad \text{for } k = 1, \dots, K - 1
+\]</span></p>
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Re-fitting to get Hessian</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 13 × 7
+   term                estimate std.error statistic conf.low conf.high coef.type
+   &lt;chr&gt;                  &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;    
+ 1 ideologyLiberal       0.615     0.0538     11.4     0.510    0.721  coeffici…
+ 2 ideologyModerate      2.40      0.0474     50.6     2.31     2.49   coeffici…
+ 3 ideologyConservati…   4.46      0.0499     89.3     4.36     4.55   coeffici…
+ 4 ideologyVery Conse…   5.45      0.0550     99.1     5.34     5.55   coeffici…
+ 5 educationHigh Scho…  -0.0957    0.0600     -1.60   -0.213    0.0219 coeffici…
+ 6 educationSome Coll…  -0.311     0.0607     -5.12   -0.430   -0.192  coeffici…
+ 7 education2-Year      -0.325     0.0638     -5.09   -0.450   -0.199  coeffici…
+ 8 education4-Year      -0.521     0.0606     -8.59   -0.640   -0.402  coeffici…
+ 9 educationPost-Grad   -0.727     0.0634    -11.5    -0.852   -0.603  coeffici…
+10 Strongly Disapprov…   2.26      0.0724     31.2    NA       NA      scale    
+11 Disapprove / Somew…   2.73      0.0727     37.6    NA       NA      scale    
+12 Neither Approve no…   2.82      0.0727     38.8    NA       NA      scale    
+13 Approve / Somewhat…   3.93      0.0735     53.5    NA       NA      scale    </code></pre>
+</div>
+</div>
+<p><span class="math display">\[
+\log \left( \frac{\mathbb{P}(\hat{Y}_i \leq k)}{\mathbb{P}(\hat{Y}_i &gt; k)} \right) = \theta_k
+- \bigg(
+  0.615 \cdot \text{ideology}_{\text{Liberal}, i}
++ 2.401 \cdot \text{ideology}_{\text{Moderate}, i}
++ 4.464 \cdot \text{ideology}_{\text{Conservative}, i}
++ 5.454 \cdot \text{ideology}_{\text{VeryConservative}, i}
+- 0.096 \cdot \text{education}_{\text{HighSchoolGrad}, i}
+- 0.311 \cdot \text{education}_{\text{SomeCollege}, i}
+- 0.325 \cdot \text{education}_{\text{2Year}, i}
+- 0.521 \cdot \text{education}_{\text{4Year}, i}
+- 0.727 \cdot \text{education}_{\text{PostGrad}, i}
+\bigg)
+\quad \text{for } k = 1, \dots, 4
+\]</span></p>
+<p>Political ideology of a citizen will consistently reflect their approval rating of the president. Using a data source from CES, we can unpack this phenomenon and understand why it is. A weakness is that the survey was conducted in 2020 and many people’s poltiical ideologies could have changed since then based on multiple world events like COVID-19 and the ensuing years.</p>
 
 </main>
 <!-- /main column -->
